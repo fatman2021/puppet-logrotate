@@ -17,14 +17,8 @@ class logrotate::base (
     }
   } else {
     package { 'logrotate':
-      ensure => latest,
+      ensure => $package_ensure,
     }
-  }
-
-  File {
-    owner   => 'root',
-    group   => 'root',
-    require => Package['logrotate'],
   }
 
   file {
