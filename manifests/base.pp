@@ -3,9 +3,22 @@
 # Examples
 #
 #   include logrotate::base
-class logrotate::base {
-  package { 'logrotate':
-    ensure => latest,
+class logrotate::base (
+  $package_ensure  = 'latest',
+  $gentoo_keywords = '',
+  $gentoo_use      = '',
+) {
+
+  if $::osfamily == 'Gentoo' {
+    portage::package { 'app-admin/logrotate':
+      keywords => $gentoo_keywords,
+      use      => $gentoo_use,
+      ensure   => $package_ensure,
+    }
+  } else {
+    package { 'logrotate':
+      ensure => latest,
+    }
   }
 
   File {
@@ -37,6 +50,9 @@ class logrotate::base {
     }
     'SuSE': {
       include logrotate::defaults::suse
+    }
+    'Gentoo': {
+      include logrotate::defaults::gentoo
     }
     default: { }
   }
